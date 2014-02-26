@@ -93,18 +93,16 @@
 					{
 			?>
 						<div text-align="left" class="col-md-8">
-							<a href=<?php echo site_url("console_controller/show_series_page/{$item["id"]}"); ?>>
-								<?php
-									echo $item["name"];
-									echo " : ";
-									if($item["represented_image_id"]>0)
-									{
-										echo "<img src=";
-										echo base_url("images/{$item["represented_image_file_name"]}");
-										echo " width='15%' height='100px'>";
-									}
-								?>
-							</a>
+							<?php
+								echo $item["name"];
+								echo " : ";
+								if($item["represented_image_id"]>0)
+								{
+									echo "<img src=";
+									echo base_url("images/{$item["represented_image_file_name"]}");
+									echo " width='15%' height='100px'>";
+								}
+							?>
 						</div>
 						<div text-align="center" class="col-md-4">
 							<a href=<?php echo site_url("console_controller/show_series_page/{$item["id"]}"); ?>>

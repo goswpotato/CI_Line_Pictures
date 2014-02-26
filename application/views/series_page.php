@@ -58,16 +58,18 @@
 
 	function change_series_name(series_id, original_name)
 	{
-		var url = "<?php echo site_url("console_controller/change_series_name/");?>";
-		url = url.concat("/");
-		url = url.concat(series_id);
+		name=prompt("enter new name" , original_name);
 
-		name=prompt("enter new name" , "original_name");
-		if(name!=null && name!="")
+		alert(name);
+		
+		if(name!=null && name!="" && name!="null")
 		{
+			var url = "<?php echo site_url("console_controller/change_series_name/");?>";
+			url = url.concat("/");
+			url = url.concat(series_id);
 			url = url.concat("/");
 			url = url.concat(name);
-			window.location.href=url;
+			window.location.href=url;			
 		}
 		
 		return false;
@@ -97,6 +99,10 @@
 		//$("div[class$='ui-selected']").removeclass("ui-selected");
 		
 		return false;
+	}
+
+	function delete_images()
+	{
 	}
   </script>
   
@@ -137,7 +143,7 @@
 				<div id="first_container">
 					<div padding="40px 15px" text-align="left">
 						<h1><?php echo $series["name"]; ?></h1>
-						<button type='button' onclick="change_series_name(<?php echo $series["id"];?>,<?php echo $series["name"];?>)">change series' name</button>
+						<button type='button' onclick='change_series_name(<?php echo $series["id"];?>,"<?php echo $series["name"];?>")'>change series' name</button>
 						<span>
 							<button type='button' id="representation_id" onclick="choose_series_representation(<?php echo $series["id"];?>)">change series' cover</button>
 						</span>
@@ -150,10 +156,8 @@
       				echo form_open("console_controller/save_comments/{$series["id"]}", $attributes);
       			?>
       				<div class ="container" id="second_container">
-      				
 					<?php
 						$i=0;
-						
 						
 						foreach ($images as $image)
 						{
@@ -176,6 +180,7 @@
 								//echo "<div><textarea rows='3' name='comment{$image["id"]}' placeholder='description...'>";
 								echo $image["comment"];
     							echo "</textarea></div>";
+    							
     							$url=site_url("console_controller/delete_image/{$series["id"]}/{$image["id"]}");
     							echo "<button type='button' onclick='delete_image_event({$series["id"]},{$image["id"]})'>Delete</button>";
     							
@@ -208,11 +213,20 @@
 	    ?>
 	    <br /><br />
 	    <div class="container">
-			<?php echo form_open_multipart("console_controller/add_images/{$series["id"]}");?>
+			<form action="<?php echo site_url("console_controller/add_images/{$series["id"]}");?>" method="post" enctype="multipart/form-data">
+				<input type="file" name="upload_images[]" size="20" multiple />
+				<br />
+				<input type="submit" value="UPLOAD" />
+			</form>
+			
+	    	<!--
+			<?php //echo form_open_multipart("console_controller/add_images/{$series["id"]}");?>
 				<input type="file" name="userfile" size="20" />
 				<br />
 				<input type="submit" value="UPLOAD" />
 			</form>
+			-->
+			
 		</div>
   	</div>
     

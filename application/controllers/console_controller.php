@@ -59,6 +59,30 @@ class Console_controller extends CI_Controller
 	
 	function add_images($series_id)
 	{
+		for($i=0; $i<count($_FILES['upload_images']['name']); $i++)
+		{
+			//Get the temp file path
+			$tmpFilePath = $_FILES['upload_images']['tmp_name'][$i];
+			
+			//Make sure we have a filepath
+			if ($tmpFilePath != "")
+			{
+				//Setup our new file path
+				$newFilePath = "./images/" . $_FILES['upload_images']['name'][$i];
+			
+				//Upload the file into the temp dir
+				if(move_uploaded_file($tmpFilePath, $newFilePath))
+				{
+					// hanle 
+				}
+				else
+				{
+					echo "error when move from temp directory to upload directory\n";
+				}
+			
+			}
+		}
+		
 		$config['upload_path'] = './images/';
 		$config['allowed_types'] = 'gif|jpg|png';
 		$config['max_size']	= '0';
