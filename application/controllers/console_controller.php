@@ -73,7 +73,6 @@ class Console_controller extends CI_Controller
 				//Upload the file into the temp dir
 				if(move_uploaded_file($tmpFilePath, $newFilePath))
 				{
-					// hanle 
 				}
 				else
 				{
@@ -83,6 +82,19 @@ class Console_controller extends CI_Controller
 			}
 		}
 		
+		$this->load->model('Images_model');
+		
+		$image_files = $_FILES["upload_images"];
+		if($this->Images_model->add_image_info($series_id, $image_files)!="")
+		{
+		}
+		else
+		{
+			redirect("console_controller/show_series_page/{$series_id}", "refresh");
+		}
+		
+		
+		/*
 		$config['upload_path'] = './images/';
 		$config['allowed_types'] = 'gif|jpg|png';
 		$config['max_size']	= '0';
@@ -111,6 +123,7 @@ class Console_controller extends CI_Controller
 			}
 			
 		}
+		*/
 	}
 	
 	function save_comments($series_id)

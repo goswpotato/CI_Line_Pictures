@@ -99,54 +99,56 @@ class Images_model extends CI_Model
 		return $images;
 	}
 	
-	function add_image_info($series_id, $info)
+	function add_image_info($series_id, $image_files)
 	{
-		$series_query=$this->db->query(
-			"
-			SELECT *
-			FROM series
-			WHERE id={$series_id}
-			"
-		);
-		$series=$series_query->row_array();
-		
-		$image_info['original_name']=$info['orig_name'];
-		$image_info['raw_name']=$info['raw_name'];
-		// $image_info["file_name"]=$info["file_name"];
-		$sub_file_name=substr($info["file_name"], strrpos($info["file_name"], ".")+1);
-		$new_name=$this->session->userdata("account") . "_" . $series["name"] . "_" . date("YmdHis", time()) . "." . $sub_file_name;
-		$image_info["file_name"]=$new_name;
-		$image_info["comment"]="";
-		
-		if($this->db->insert('images',$image_info))
+		for($i=0;$i<count($image_files["name"]);$i++)
 		{
-			rename("./images/{$info["file_name"]}", "./images/{$new_name}");
+			$series_query=$this->db->query(
+				"
+				SELECT *
+				FROM series
+				WHERE id={$series_id}
+				"
+			);
+			$series=$series_query->row_array();
 			
-			$num=$this->db->insert_id();
+			$image_info["original_name"]=$image_files['name'][$i];
+			//$image_info['raw_name']=$info['raw_name'];
+			// $image_info["file_name"]=$info["file_name"];
+			$sub_file_name=substr($image_files["name"][$i], strrpos($image_files["name"][$i], ".")+1);
+			$new_name=$this->session->userdata("account") . "_" . $series["name"] . "_" . date("YmdHis", time()) . "_" . $i . "." . $sub_file_name;
+			$image_info["file_name"]=$new_name;
+			$image_info["comment"]="";
 			
-			$mapping_info["series_id"]=$series_id;
-			$mapping_info["image_id"]=$num;
-			$this->db->insert("image_mapping",$mapping_info);
-			
-			
-			
-			if($series["represented_image_id"]<0)
+			if($this->db->insert('images',$image_info))
 			{
-				$this->db->query(
-					"
-					UPDATE series
-					SET represented_image_id={$num},
-					    represented_image_raw_name='{$image_info["raw_name"]}',
-					    represented_image_file_name='{$image_info["file_name"]}'
-					WHERE id={$series["id"]}
-					"
-				);	
+				rename("./images/{$image_files["name"][$i]}", "./images/{$new_name}");
+					
+				$num=$this->db->insert_id();
+					
+				$mapping_info["series_id"]=$series_id;
+				$mapping_info["image_id"]=$num;
+				$this->db->insert("image_mapping",$mapping_info);
+				
+				if($series["represented_image_id"]<0)
+				{
+					$this->db->query(
+						"
+						UPDATE series
+						SET represented_image_id={$num},
+						represented_image_file_name='{$image_info["file_name"]}'
+						WHERE id={$series["id"]}
+						"
+					);
+				}
 			}
-			
-			return '';
+			else 
+			{
+				return 'wrong with database';
+			}
 		}
 		
-		return 'wrong with database';
+		return '';
 	}
 	
 	function new_series()
