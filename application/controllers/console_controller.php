@@ -78,7 +78,6 @@ class Console_controller extends CI_Controller
 				{
 					echo "error when move from temp directory to upload directory\n";
 				}
-			
 			}
 		}
 		
@@ -138,6 +137,21 @@ class Console_controller extends CI_Controller
 	{	
 		$this->load->model('Images_model');
 		$this->Images_model->delete_image($series_id, $image_id);
+		
+		redirect("console_controller/show_series_page/{$series_id}", "refresh");
+	}
+	
+	function delete_images($series_id, $images_id)
+	{
+		$image_ids=explode("a", $images_id);
+		
+		var_dump($image_ids);
+		
+		$this->load->model('Images_model');
+		foreach ($image_ids as $image_id)
+		{	
+			$this->Images_model->delete_image($series_id, $image_id);
+		}
 		
 		redirect("console_controller/show_series_page/{$series_id}", "refresh");
 	}

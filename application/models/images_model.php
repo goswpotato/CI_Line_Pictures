@@ -156,7 +156,6 @@ class Images_model extends CI_Model
 		// can reference the send_signup() in users_model
 		$series_info["name"]=$this->input->post("series_name");
 		$series_info["represented_image_id"]=-1;
-		$series_info["represented_image_raw_name"]="";
 		
 		if($this->db->insert("series", $series_info))
 		{
@@ -327,7 +326,6 @@ class Images_model extends CI_Model
 			$images=$this->get_images($series_id);
 				
 			$new["id"]=-1;
-			$new["raw_name"]='';
 			$new["file_name"]='';
 			
 			foreach ($images as $new_image)
@@ -335,7 +333,6 @@ class Images_model extends CI_Model
 				if($new["id"]==-1 || $new_image["id"]<$new["id"])
 				{
 					$new["id"]=$new_image["id"];
-					$new["raw_name"]=$new_image["raw_name"];
 					$new["file_name"]=$new_image["file_name"];
 				}
 			}
@@ -344,7 +341,6 @@ class Images_model extends CI_Model
 				"
 				UPDATE series
 				SET represented_image_id={$new["id"]},
-				represented_image_raw_name='{$new["raw_name"]}',
 				represented_image_file_name='{$new["file_name"]}'
 				WHERE id={$series["id"]}
 				"
@@ -379,7 +375,6 @@ class Images_model extends CI_Model
 			"
 			UPDATE series
 			SET represented_image_id={$image_id},
-			    represented_image_raw_name='{$image_info["raw_name"]}',
 			    represented_image_file_name='{$image_info["file_name"]}'
 			WHERE id={$series_id}
 			"
